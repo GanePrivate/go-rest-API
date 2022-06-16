@@ -11,7 +11,7 @@ import (
 )
 
 // This is the root directory of uploaded files
-var base = "/home/mehrdad/example"
+var base = "/home/kjlb/src/webdav/dav/data"
 
 func Upload(file *multipart.FileHeader) (string, error) {
 	src, err := file.Open()
@@ -19,7 +19,7 @@ func Upload(file *multipart.FileHeader) (string, error) {
 		return "", err
 	}
 	defer src.Close()
-	n := fmt.Sprintf("%d - %s", time.Now().UTC().Unix(), file.Filename)
+	n := fmt.Sprintf("%d-%s", time.Now().UTC().Unix(), file.Filename)
 	dst := fmt.Sprintf("%s/%s", base, n)
 	out, err := os.Create(dst)
 	if err != nil {
@@ -31,6 +31,7 @@ func Upload(file *multipart.FileHeader) (string, error) {
 
 	return n, err
 }
+
 func Download(n string) (string, []byte, error) {
 	dst := fmt.Sprintf("%s/%s", base, n)
 	b, err := ioutil.ReadFile(dst)
@@ -40,4 +41,17 @@ func Download(n string) (string, []byte, error) {
 	m := http.DetectContentType(b[:512])
 
 	return m, b, nil
+}
+
+// サーバーのファイル一覧を返却する
+func List() ([]string, error) {
+	files, err := ioutil.ReadDir(base)
+	if err != nil {
+		return nil, err
+	}
+	var names []string
+	for _, f := range files {
+		names = append(names, f.Name())
+	}
+	return names, nil
 }
