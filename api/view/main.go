@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/GanePrivate/go-rest-API/api/controller"
 	"github.com/gin-gonic/gin"
-	"github.com/mehrdadep/go-rest-example/api/controller"
 )
 
 type File struct {

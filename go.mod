@@ -1,4 +1,4 @@
-module github.com/mehrdadep/go-rest-example
+module github.com/GanePrivate/go-rest-API
 
 go 1.14
 
