@@ -7,6 +7,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"os/exec"
 	"time"
 )
 
@@ -19,6 +20,10 @@ func Upload(file *multipart.FileHeader, filePath string) (string, error) {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		os.MkdirAll(base+"/"+filePath, 0777)
 	}
+
+	// linuxコマンドを実行する
+	exec.Command("chmod", "777", base+"/"+filePath).Run()
+	exec.Command("chown", "root:root", base+"/"+filePath).Run()
 
 	src, err := file.Open()
 	if err != nil {
