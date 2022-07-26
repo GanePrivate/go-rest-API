@@ -26,6 +26,7 @@ func Upload(file *multipart.FileHeader, filePath string) (string, error) {
 	}
 	defer src.Close()
 	n := fmt.Sprintf("%d-%s", time.Now().UTC().Unix(), file.Filename)
+	fmt.Println(base + filePath + n)
 	dst := fmt.Sprintf("%s/%s/%s", base, filePath, n)
 	out, err := os.Create(dst)
 	if err != nil {
