@@ -18,13 +18,20 @@ func StartServer() {
 	v1 := api.Group("/v1")
 	files := v1.Group("/files")
 
+	// ファイルを受け取るコード
 	files.POST("/", func(c *gin.Context) {
 		file, err := c.FormFile("file")
+
+		// フォームから保存するパスの情報を取得
+		filePath := c.PostForm("filePath")
+
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		n, err := controller.Upload(file)
+
+		// 受け取ったファイルを保存する
+		n, err := controller.Upload(file, filePath)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -35,6 +42,7 @@ func StartServer() {
 		})
 	})
 
+	// ファイル名を取得してそのデータを返すコード
 	files.GET("/:name/", func(c *gin.Context) {
 		var f File
 		if err := c.ShouldBindUri(&f); err != nil {

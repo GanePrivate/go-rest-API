@@ -13,14 +13,20 @@ import (
 // This is the root directory of uploaded files
 var base = "/home/kjlb/src/webdav/dav/data"
 
-func Upload(file *multipart.FileHeader) (string, error) {
+func Upload(file *multipart.FileHeader, filePath string) (string, error) {
+
+	// filePathのディレクトリが存在しない場合は作成する
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		os.MkdirAll(base+"/"+filePath, 0755)
+	}
+
 	src, err := file.Open()
 	if err != nil {
 		return "", err
 	}
 	defer src.Close()
 	n := fmt.Sprintf("%d-%s", time.Now().UTC().Unix(), file.Filename)
-	dst := fmt.Sprintf("%s/%s", base, n)
+	dst := fmt.Sprintf("%s/%s/%s", base, filePath, n)
 	out, err := os.Create(dst)
 	if err != nil {
 		return "", err
