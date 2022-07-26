@@ -17,7 +17,7 @@ func Upload(file *multipart.FileHeader, filePath string) (string, error) {
 
 	// filePathのディレクトリが存在しない場合は作成する
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		os.MkdirAll(base+"/"+filePath, 0777)
+		os.MkdirAll(base+"/"+filePath, 0644)
 	}
 
 	src, err := file.Open()
